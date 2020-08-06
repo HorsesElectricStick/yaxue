@@ -33,6 +33,8 @@ function get_option (x) {
                 for (let i in x){
                     if (i == 'college_name') {
                         continue;
+                    } else if (x[i] === null){
+                        item.push(0);
                     } else {
                         item.push(x[i]);
                     }
