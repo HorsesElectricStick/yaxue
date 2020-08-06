@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+   <meta charset="UTF-8">
+   <title>Document</title>
+</head>
+<body>
+    {% for i in data %}
+        <a href="{% url 'radar:detail' i.id %}">{{ i.college_name }}</a>
+        <br>
+    {% endfor %}
+</body>
+</html>
