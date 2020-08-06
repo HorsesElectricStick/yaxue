@@ -1,8 +1,68 @@
-function get_option (data) {
-    console.log(data.college_name)
-    let college_name = Object.keys(data);
-    let option = {
-        legend: {data: college_name, icon: 'circle'},
+function get_option (x) {
+    let college = [],
+        option, 
+        d = [],
+        d2 = [],
+        o = [];
+    for (let i in x.detail) {
+        college.push(x.detail[i]);
+    }
+    for (let i in college) {
+        d.push({name: college[i].college_name, icon: 'circle'});
+    }
+    for (let i in college[0]) {
+        if (i == 'college_name') {
+            continue;
+        } else {
+                o.push({name: i, max:function(t){
+                    if (t < 1) {
+                        return 1;
+                    } else if (t === null){
+                        return 10000;
+                    } else {
+                        return 10 ** t.toString().length
+                    }
+                }(college[0][i])});
+            }
+        }
+    for (let i in college) {
+        d2.push({
+            name: college[i].college_name,
+            value: function (x){
+                let item = [];
+                for (let i in x){
+                    if (i == 'college_name') {
+                        continue;
+                    } else {
+                        item.push(x[i]);
+                    }
+                }
+                return item;
+            }(college[i]),
+            label: {                    // 单个拐点文本的样式设置
+                normal: {
+                    show: true,             // 单个拐点文本的样式设置。[ default: false ]
+                    position: 'top',        // 标签的位置。[ default: top ]
+                    distance: function(x) {
+                        if (i == 0) {
+                            return 5;
+                        } else {
+                            return 15;
+                        }
+                    } (i),            // 距离图形元素的距离。当 position 为字符描述值（如 'top'、'insideRight'）时候有效。[ default: 5 ]
+                    color: 'auto',          // 文字的颜色。如果设置为 'auto'，则为视觉映射得到的颜色，如系列色。[ default: "#fff" ]
+                    fontSize: 14,           // 文字的字体大小
+                    formatter:function(params) {
+                        return params.value;
+                    }
+                }
+            }
+        });
+    }
+    option = {
+        legend: {
+            data: d
+        },
         radar: {
             formatter: '{value}',
             center: ['50%', '50%'],
@@ -12,20 +72,13 @@ function get_option (data) {
                     backgroundColor: '#999',
                     borderRadius: 3,
                     padding: [3, 5],
-                    fontSize: 12,
+                    fontSize: 14,
                 }
             },
-            indicator: [
-                { name: '在校', max: 6500}, 
-                { name: '全日制', max: 1},
-                { name: '非全日制', max: 1},
-                { name: 'test3', max: 38000},
-                { name: 'test2', max: 52000},
-                { name: 'test1', max:30000}
-            ]
+            indicator: o
         },
         series: [{
-            name: 'ttttt',
+            name: 'All Beauty College',
             type: 'radar',
             areaStyle: {normal: {opacity: 0.5}},
             itemStyle: {
@@ -37,41 +90,7 @@ function get_option (data) {
                 },
 
             },
-            data : [
-                {
-                    value : [data.student_count, data.full_time, data.part_time, 35000, 50000, 19000],
-                    name : 'ttt',
-                    symbolSize: 5,
-                    label: {                    // 单个拐点文本的样式设置
-                        normal: {
-                            show: true,             // 单个拐点文本的样式设置。[ default: false ]
-                            position: 'top',        // 标签的位置。[ default: top ]
-                            distance: 5,            // 距离图形元素的距离。当 position 为字符描述值（如 'top'、'insideRight'）时候有效。[ default: 5 ]
-                            color: 'auto',          // 文字的颜色。如果设置为 'auto'，则为视觉映射得到的颜色，如系列色。[ default: "#fff" ]
-                            fontSize: 12,           // 文字的字体大小
-                            formatter:function(params) {
-                                return params.value;
-                            }
-                        }
-                    },
-                },
-                    {
-                    value : [5000, 14000, 29000, 31000, 42000, 21000],
-                    name : 'tttt',
-                        label: {                    // 单个拐点文本的样式设置
-                            normal: {
-                                show: true,             // 单个拐点文本的样式设置。[ default: false ]
-                                position: 'top',        // 标签的位置。[ default: top ]
-                                distance: 5,            // 距离图形元素的距离。当 position 为字符描述值（如 'top'、'insideRight'）时候有效。[ default: 5 ]
-                                color: 'auto',          // 文字的颜色。如果设置为 'auto'，则为视觉映射得到的颜色，如系列色。[ default: "#fff" ]
-                                fontSize: 12,           // 文字的字体大小
-                                formatter:function(params) {
-                                    return params.value;
-                                }
-                            }
-                        },
-                }
-            ]
+            data : d2
         }]
     };
     return option

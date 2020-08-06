@@ -3,10 +3,10 @@
 <head>
     {% load static %}
     <meta charset="UTF-8">
-    <title>雷达图</title>
+    <title>{{ pk }}雷达图</title>
+    <script src="{% static 'radar/js/radar_draw.js' %}"></script>
     <script src="https://cdn.bootcss.com/echarts/3.7.1/echarts.min.js"></script>
     <script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
-    <script src="{% static 'radar/js/radar_draw.js' %}"></script>
 </head>
 <body>
     <div id="chart" style="height: 700px;width: 700px">
@@ -15,6 +15,7 @@
             $(document).ready(function() {
                 $.getJSON("{% url 'radar:ajax_api' pk %}", function(json){
                     let x = get_option(json);
+                    console.log(x);
                     radar_chart.setOption(x);
                 })
             });
