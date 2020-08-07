@@ -52,7 +52,7 @@ function get_option (x) {
                             return 15;
                         }
                     } (i),            // 距离图形元素的距离。当 position 为字符描述值（如 'top'、'insideRight'）时候有效。[ default: 5 ]
-                    color: 'auto',          // 文字的颜色。如果设置为 'auto'，则为视觉映射得到的颜色，如系列色。[ default: "#fff" ]
+                    color: 'auto',          // 文字的颜色。如果设置为 'auto'，则为视觉映射得到的颜色。[ default: "#fff" ]
                     fontSize: 14,           // 文字的字体大小
                     formatter:function(params) {
                         return params.value;
