@@ -4,9 +4,11 @@
     {% load static %}
     <meta charset="UTF-8">
     <title>{{ pk }}雷达图</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'radar/css/jquery-ui.min.css' %}">
     <script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
     <script src="https://cdn.bootcss.com/echarts/3.7.1/echarts.min.js"></script>
     <script src="{% static 'radar/js/radar_draw.js' %}"></script>
+    <script src="{% static 'radar/js/jquery-ui.min.js' %}"></script>
 </head>
 <body>
     <div id="chart" style="height: 700px;width: 700px">
@@ -24,17 +26,23 @@
          <form action="javascript:void(0)" method="get" style="margin: auto 0;">
              请输入学校名：<br/>
              <input type="text" id="search-text" name="q" autocomplete="off"><button type="button" id='search-button'>搜索</button>
-             <p><span id='search-result'></span></p>
          </form>
      </div>
      <script>
      $(document).ready(function(){
         $("#search-text").keyup(function(){
-            var q = $("#search-text").val();                         
-            $.get("{% url 'radar:search_api' %}",{keywords: q}, function(data){     
-                for (var i = data.length - 1; i >= 0; i--) {        
-                    $('#search-result').append(data[i]['college_name']+'<br/>')  
-                };
+            let q = $("#search-text").val();                         
+            $.get("{% url 'radar:search_api' %}",{keywords: q}, function(data){    
+                    $('#search-text').autocomplete({
+                        source:function(x){
+                            let res = [];
+                            for (let i=x.length-1;i>=0;i--){
+                                res.push(x[i]['college_name']);
+                            }
+                            return res;
+                        }(data),
+                        delay: 10,
+                    });
             })
         });
         $('#search-text').keyup(function(){
