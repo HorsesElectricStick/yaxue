@@ -21,7 +21,11 @@ function get_option (x) {
                         } else if (t === null){
                             return 10000;
                         } else {
-                            return 10 ** t.toString().length
+                            if (t.toString()[0] < 5) {
+                                return 5 * 10 ** (t.toString().length -1);
+                            } else {
+                                return 10 ** t.toString().length;
+                            }
                         }
                     }(college[0][i])});
                 }}
