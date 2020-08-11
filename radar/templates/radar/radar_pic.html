@@ -23,34 +23,55 @@
         </script>
     </div>
     <div>
-         <form action="javascript:void(0)" method="get" style="margin: auto 0;">
-             请输入学校名：<br/>
-             <input type="text" id="search-text" name="q" autocomplete="off"><button type="button" id='search-button'>搜索</button>
-         </form>
-     </div>
+        请输入学校名：<br/>
+        <input type="text" id="search-text" name="q" autocomplete="off">
+    </div>
+    <div style="text-align:center;vertical-align:middle;">
+        <form action="javascript:void(0)" method="get">
+            <input readonly="true" id='c1'><button onclick="clear_text('c1')">取消</button>
+            <br>
+            <input readonly="true" id='c2'><button onclick="clear_text('c2')">取消</button>
+            <br>
+            <button type="button" id="compare_button">比较</button>
+        </form>
+    </div>
      <script>
-     $(document).ready(function(){
-        $("#search-text").keyup(function(){
-            let q = $("#search-text").val();                         
-            $.get("{% url 'radar:search_api' %}",{keywords: q}, function(data){    
-                    $('#search-text').autocomplete({
-                        source:function(x){
-                            let res = [];
-                            for (let i=x.length-1;i>=0;i--){
-                                res.push(x[i]['college_name']);
+        $(document).ready(function(){
+            $("#search-text").keyup(function(){
+                let q = $("#search-text").val();                         
+                $.get("{% url 'radar:search_api' %}",{keywords: q}, function(data){    
+                        $('#search-text').autocomplete({
+                            source:function(x){
+                                let res = [];
+                                for (let i=x.length-1;i>=0;i--){
+                                    res.push(x[i]['college_name']);
+                                }
+                                return res;
+                            }(data),
+                            delay: 10,
+                            mustMatch: true,
+                            select: function(e, ui) {
+                                if ($('#c1').val() == "") {  
+                                    $('#c1').val(ui.item.value);
+                                } else {
+                                    $('#c2').val(ui.item.value);
+                                }
                             }
-                            return res;
-                        }(data),
-                        delay: 10,
-                    });
-            })
-        });
-        $('#search-text').keyup(function(){
-            $('#search-result').empty();
-        })
-        $('#search-text').blur(function(){
-            $('#search-result').empty();
-            })
+                        });
+                    })
+                });
+            });
+        $('#compare_button').on('click', function() {
+            let college1 = $('#c1').val(), college2 = $('#c2').val();
+            if (college1==""||college2=="") {
+                alert('需选择两所学校进行对比');
+            } else {
+                $.getJSON("{% url 'radar:compare_api' %}", {c1: college1, c2: college2}, function(json){
+                    let radar_chart = echarts.init(document.getElementById("chart"));
+                    let x = get_option(json);
+                    radar_chart.setOption(x);
+                })
+            }
         });
     </script>
 </body>

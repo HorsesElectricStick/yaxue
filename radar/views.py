@@ -34,7 +34,7 @@ def ajax_detail(request):  #  学校详情json接口
             'student_count': detail.student_count,
             'full_time': detail.full_time,
             'part_time': detail.part_time}],
-    }
+        }
     return JsonResponse(context)
 
 @timer
@@ -49,3 +49,21 @@ def ajax_search(request):  #  搜索框学校名json接口
 
 def Home(request):  #  主页重定向
     return HttpResponseRedirect(reverse('radar:school_list'))
+
+@timer
+def ajax_compare(request):
+    c = [request.GET['c1'], request.GET['c2']]
+    context = {
+        'detail': []
+    }
+    for i in c:
+        data = get_object_or_404(CollegeDetail, college_name=i, year='latest')
+        res = {
+            'college_name': i,
+            'student_count': data.student_count,
+            'full_time': data.full_time,
+            'part_time': data.part_time,
+            'acceptance_rate': data.acceptance_rate
+        }
+        context['detail'].append(res)
+    return JsonResponse(context)

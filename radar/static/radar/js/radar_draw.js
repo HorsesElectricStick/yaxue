@@ -10,21 +10,41 @@ function get_option (x) {
     for (let i in college) {
         d.push({name: college[i].college_name, icon: 'circle'});
     }
-    for (let i in college[0]) {
-        if (i == 'college_name') {
-            continue;
-        } else {
-                o.push({name: i, max:function(t){
-                    if (t < 1) {
-                        return 1;
-                    } else if (t === null){
-                        return 10000;
-                    } else {
-                        return 10 ** t.toString().length
-                    }
-                }(college[0][i])});
-            }
-        }
+    if (college.length == 1) {
+        for (let i in college[0]) {
+            if (i == 'college_name') {
+                continue;
+            } else {
+                    o.push({name: i, max:function(t){
+                        if (t < 1) {
+                            return 1;
+                        } else if (t === null){
+                            return 10000;
+                        } else {
+                            return 10 ** t.toString().length
+                        }
+                    }(college[0][i])});
+                }}
+    } else {
+        for (let i in college[0]) {
+            if (i == 'college_name') {
+                continue;
+            } else {
+                    o.push({name: i, max:function(t1,t2){
+                        if (Math.max(t1,t2) < 1) {
+                            return 1;
+                        } else if (t1 === null && t2 === null){
+                            return 10000;
+                        } else {
+                            if (Math.max(t1,t2).toString()[0] < 5) {
+                                return 5 * 10 ** (Math.max(t1,t2).toString().length -1);
+                            } else {
+                                return 10 ** (Math.max(t1,t2).toString().length);
+                            }
+                        }
+                    }(college[0][i], college[1][i])});
+                }}
+    }
     for (let i in college) {
         d2.push({
             name: college[i].college_name,
@@ -96,4 +116,8 @@ function get_option (x) {
         }]
     };
     return option
+}
+
+function clear_text (id) {
+    $('#'+id).val("");
 }
