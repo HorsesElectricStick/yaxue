@@ -18,6 +18,7 @@
                 $.getJSON("{% url 'radar:detail_api' %}", {pk: '{{ pk }}'}, function(json){
                     let x = get_option(json);
                     radar_chart.setOption(x);
+                    $('#c1').val(json.detail[0].college_name);
                 })
             });
         </script>
